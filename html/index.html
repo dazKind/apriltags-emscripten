@@ -10,6 +10,12 @@
       log.appendChild(txt);
     }
 
+    function draw(detected) {
+      for (tag in detected) {
+
+      }
+    }
+
     function AprilTags() {
       var detections = [];
 
@@ -50,7 +56,7 @@
         var canvas = document.createElement('canvas');
         canvas.width  = w;
         canvas.height = h;
-        // document.body.appendChild(canvas);
+        document.body.appendChild(canvas);
 
         var ctx = canvas.getContext("2d");
         ctx.drawImage(im,0,0, w, h);
@@ -67,6 +73,36 @@
 
         Module._free(buf);
 
+        for (i in detections) {
+          var tag = detections[i];
+
+          console.log(tag);
+
+          ctx.beginPath();
+          ctx.strokeStyle="blue";
+          ctx.moveTo(tag.x1,tag.y1);
+          ctx.arc(tag.x1,tag.y1, 5, 0, 2 * Math.PI, false);
+          ctx.stroke();
+          ctx.moveTo(tag.x2,tag.y2);
+          ctx.arc(tag.x2,tag.y2, 5, 0, 2 * Math.PI, false);
+          ctx.stroke();
+          ctx.moveTo(tag.x3,tag.y3);
+          ctx.arc(tag.x3,tag.y3, 5, 0, 2 * Math.PI, false);
+          ctx.stroke();
+          ctx.moveTo(tag.x4,tag.y4);
+          ctx.arc(tag.x4,tag.y4, 5, 0, 2 * Math.PI, false);
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.strokeStyle="red";
+          ctx.moveTo(tag.x1,tag.y1);
+          ctx.lineTo(tag.x2,tag.y2);
+          ctx.lineTo(tag.x3,tag.y3);
+          ctx.lineTo(tag.x4,tag.y4);
+          ctx.lineTo(tag.x1,tag.y1);
+          ctx.stroke();
+        }
+
         return detections;
       }
     }
@@ -80,6 +116,9 @@
             im.onload = function() {
               write("Got image");
               var tags = detector(im);
+
+              console.log(tags);
+
               write(tags.length + ' tags detected');
 
               for (var idx = 0; idx < tags.length; idx++) {
